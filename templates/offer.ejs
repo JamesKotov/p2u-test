@@ -1,0 +1,157 @@
+<div class="container">
+    <div class="row my-3">
+        <h1>Предложениe</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row my-3">
+        <form method="post" action="" id="form">
+            <% if (clicks) { %>
+                <div class="form-group">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>ID</th>
+                            <th>Offer ID</th>
+                            <th>Hash</th>
+                            <th>Datetime</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% clicks.forEach(function (click) {
+                            const id = click.get('id')
+                        %>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="clicks" value="<%= id %>">
+                            </td>
+                            <td>
+                                <%= id %>
+                            </td>
+                            <td>
+                                <%= click.get('offer_id') %>
+                            </td>
+                            <td>
+                                <%= click.get('hash') %>
+                            </td>
+                            <td>
+                                <%= click.get('datetime') %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+            <div class="form-group">
+                <input name="order_id" class="form-control" placeholder="Номер заказа">
+            </div>
+            <div class="form-group">
+                <input name="order_sum" type="number" class="form-control" placeholder="Сумма заказа">
+            </div>
+            <div class="form-group">
+                <textarea name="comment" class="form-control" rows="3"
+                          placeholder="Комментарий"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="alert alert-success d-none" role="alert" id="success">success</div>
+        <div class="alert alert-danger d-none" role="alert" id="fail">fail</div>
+    </div>
+</div>
+<script>
+    function ready(fn) {
+        if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+            fn();
+        } else {
+            document.addEventListener('DOMContentLoaded', fn);
+        }
+    }
+
+    // inspired by, but returns FormData instead of string
+    /*!
+     * Serialize all form data into a query string
+     * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
+     * @param  {Node}   form The form to serialize
+     * @return {String}      The serialized form data
+     */
+    function serialize(form) {
+
+        // Setup our serialized data
+        var formData = new FormData();
+
+        // Loop through each field in the form
+        for (var i = 0; i < form.elements.length; i++) {
+
+            var field = form.elements[i];
+
+            // Don't serialize fields without a name, submits, buttons, file and reset inputs, and disabled fields
+            if (!field.name || field.disabled || field.type === 'file' || field.type === 'reset' || field.type === 'submit' || field.type === 'button') continue;
+
+            // If a multi-select, get all selections
+            if (field.type === 'select-multiple') {
+                for (var n = 0; n < field.options.length; n++) {
+                    if (!field.options[n].selected) continue;
+                    formData.append(encodeURIComponent(field.name), encodeURIComponent(field.options[n].value));
+                }
+            }
+
+            // Convert field data to a query string
+            else if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
+                formData.append(encodeURIComponent(field.name), encodeURIComponent(field.value));
+            }
+        }
+
+        return formData;
+    }
+
+    function init() {
+        var success = document.querySelector('#success');
+        var fail = document.querySelector('#fail');
+        var form = document.querySelector('#form');
+        var method = form.getAttribute('method');
+        var action = form.getAttribute('action');
+        var submit = document.querySelector('#submit');
+
+        submit.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            success.classList.add("d-none");
+            success.innerHTML = '<div><b>Success!</b></div>';
+
+            fail.classList.add("d-none");
+            fail.innerHTML = '<div><b>Request failed!</b></div>';
+
+            fetch(action, {body: serialize(form), method: method})
+                .then(function (response) {
+                    return response.json()
+                        .then(function (data) {
+                            return {
+                                success: response.status >= 200 && response.status <= 299,
+                                messages: data.messages
+                            }
+                        })
+                })
+                .then(function (result) {
+                    var el = result.success ? success : fail;
+                    if (result.messages.length) {
+                        el.innerHTML += '<ul>';
+                        result.messages.forEach(msg => el.innerHTML += '<li>' + msg + '</li>');
+                        el.innerHTML += '</ul>';
+                    }
+                    el.classList.remove("d-none")
+                })
+                .catch(function () {
+                    fail.classList.remove("d-none");
+                });
+        });
+    }
+
+    ready(init);
+
+</script>

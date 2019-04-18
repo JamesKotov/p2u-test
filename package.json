@@ -1,0 +1,66 @@
+{
+  "name": "p2u-test",
+  "version": "1.0.0",
+  "description": "Test work for pay2u",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon",
+    "ava": "cross-env NODE_ENV=test ava -s",
+    "nyc": "cross-env NODE_ENV=test nyc ava -s",
+    "test": "npm run ava",
+    "test-coverage": "npm run nyc",
+    "coverage-report": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JamesKotov/p2u-test.git"
+  },
+  "author": "Evgenii Strigo",
+  "license": "none",
+  "bugs": {
+    "url": "https://github.com/JamesKotov/p2u-test/issues"
+  },
+  "homepage": "https://github.com/JamesKotov/p2u-test#readme",
+  "ava": {
+    "failFast": true,
+    "verbose": true
+  },
+  "nyc": {
+    "check-coverage": true,
+    "lines": 65,
+    "functions": 65,
+    "branches": 65,
+    "reporter": [
+      "lcov",
+      "html",
+      "text"
+    ]
+  },
+  "remarkConfig": {
+    "plugins": [
+      "preset-github"
+    ]
+  },
+  "dependencies": {
+    "cross-env": "^5.2.0",
+    "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
+    "koa-convert": "^1.2.0",
+    "koa-ejs": "^4.2.0",
+    "koa-req-logger": "^1.5.2",
+    "koa-router": "^7.4.0",
+    "pino": "^5.12.2",
+    "sequelize": "^5.7.0",
+    "sqlite3": "^4.0.6"
+  },
+  "devDependencies": {
+    "ava": "latest",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "chai-spies": "^1.0.0",
+    "chai-validate-response": "github:JamesKotov/chai-validate-response#version-0.0.3",
+    "codecov": "latest",
+    "nyc": "latest"
+  }
+}

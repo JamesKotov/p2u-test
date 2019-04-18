@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="row my-3">
+        <h1>Предложения</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row my-3">
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% offers.forEach(function (offer) {
+                const id = offer.get('id')
+            %>
+            <tr>
+                <td>
+                    <%= id %>
+                </td>
+                <td>
+                    <a href="/offers/<%= id %>"><%= offer.get('name') %></a>
+                </td>
+            </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>

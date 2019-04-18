@@ -1,0 +1,20 @@
+{
+  "development": {
+    "dialect": "sqlite",
+    "storage": "./db/data.db",
+    "logging": false,
+    "port": 80
+  },
+  "test": {
+    "dialect": "sqlite",
+    "storage": "./db/data.db",
+    "logging": false,
+    "port": 81
+  },
+  "production": {
+    "dialect": "sqlite",
+    "storage": "./db/data.db",
+    "logging": false,
+    "port": 80
+  }
+}
